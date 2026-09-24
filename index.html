@@ -203,6 +203,24 @@ section.panel{padding-block:clamp(2rem,5vw,3.5rem) 0}
 .rep-credit{font:400 .72rem/1.3 var(--mono);color:var(--ink-3);margin:-.2rem 0 .4rem}
 .rep-meta{font:400 .78rem/1.45 var(--mono);color:var(--ink-3);margin:0 0 .45rem}
 .rep-sum{font-size:.9rem;line-height:1.55;color:var(--ink-2);margin:0}
+.course{border-top:1px solid var(--ink);padding:1.1rem 0 2rem}
+.course h3{font:400 clamp(1.3rem,2.6vw,1.6rem)/1.2 var(--serif);margin:0 0 .5rem}
+.course p{max-width:var(--measure);margin:0 0 .9rem}
+.course .he-title{font-family:var(--he);color:var(--ink-2);margin-top:-.3rem}
+.note-s{font-size:.88rem;color:var(--ink-3)}
+.weeks{counter-reset:w;list-style:none;margin:.5rem 0 1.2rem;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:.3rem 2rem}
+.weeks li{counter-increment:w;font-size:.94rem;line-height:1.45;padding-left:2.2rem;position:relative}
+.weeks li::before{content:counter(w);position:absolute;left:0;font:400 .76rem/1.6 var(--mono);color:var(--spike)}
+[dir="rtl"] .weeks li{padding-left:0;padding-right:2.2rem}
+[dir="rtl"] .weeks li::before{left:auto;right:0}
+.he-block{font-family:var(--he)}
+.he-block p{max-width:var(--measure)}
+.req-h{font:600 .78rem/1 var(--cond);letter-spacing:.06em;color:var(--ink-3);margin:.5rem 0 .4rem}
+.req{margin:0 0 1rem;padding-inline-start:1.1rem;font-size:.92rem;line-height:1.6}
+.reading{list-style:none;margin:.4rem 0 1.2rem;padding:0;max-width:var(--measure)}
+.reading li{padding:.45rem 0;border-top:1px solid var(--rule-2);font-size:.95rem}
+.reading .ra{font:400 .8rem/1.4 var(--mono);color:var(--ink-3);display:block}
+.reading a.alt{font-size:.85em;margin-inline-start:.3rem}
 footer{margin-top:clamp(4rem,9vw,7rem);border-top:1px solid var(--ink);padding-block:1.5rem 3rem}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;font:400 .8rem/1.6 var(--mono);color:var(--ink-3)}
 address{font-style:normal}
@@ -216,6 +234,7 @@ address{font-style:normal}
       <a href="#research">Research</a>
       <a href="#group">Group</a>
       <a href="#publications">Publications</a>
+      <a href="#teaching">Teaching</a>
       <a href="#society">Science &amp; society</a>
       <a href="#music">Music</a>
     </nav>
@@ -261,6 +280,7 @@ address{font-style:normal}
       </div>
       <a href="#group"><span class="k">Group</span><span class="d">4 current members · 22 alumni, 1996–2025</span></a>
       <a href="#publications"><span class="k">Publications</span><span class="d"><span id="npubs">82</span> papers, books and datasets since 1987, searchable</span></a>
+      <a href="#teaching"><span class="k">Teaching</span><span class="d">Two graduate courses: excitability, and psychology &amp; physiology</span></a>
       <a href="#society"><span class="k">Science &amp; society</span><span class="d">16 essays and lectures in Hebrew and English</span></a>
       <a href="#music"><span class="k">Music</span><span class="d">One-take sketches on a ten-string guitar</span></a>
     </nav>
@@ -341,6 +361,42 @@ address{font-style:normal}
             <span class="count" id="count" aria-live="polite"></span>
           </div>
           <div id="pubs"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="teaching" hidden aria-labelledby="h-teach">
+      <div class="sec-head"><span class="num">Teaching</span><h2 id="h-teach">Graduate courses</h2></div>
+      <div class="body">
+        <div class="side">Technion<br>Faculty of Medicine</div>
+        <div>
+          <article class="course">
+            <h3>Biophysics of membrane excitability</h3>
+            <p>The physics and chemistry of ions in solution, diffusion, osmosis, the Nernst–Planck electro-diffusion equation and the Nernst potential, and the Goldman–Hodgkin–Katz equation. The Hodgkin–Huxley model of excitability, the dynamics of macroscopic and microscopic membrane ionic conductances, and methods for their measurement and analysis. Classes of mathematical models that capture the phenomenon of action potential generation at various timescales, emphasising models derived from the theory of nonlinear oscillators.</p>
+            <p class="book-links"><a href="https://data.mendeley.com/datasets/2kn5ymgwvg/1">Lecture notes — interactive Mathematica notebook (CDF)</a></p>
+            <p class="note-s">The notes are a computable document: animations and manipulations for the course subjects.</p>
+          </article>
+          <article class="course">
+            <h3>Psychology &amp; Physiology: a space for dialogue</h3>
+            <p lang="he" dir="rtl" class="he-title">פסיכולוגיה ופיזיולוגיה: מקום לדיאלוג</p>
+            <p>Analysis of fundamental constraints inherent to modern brain research aimed at understanding human behavior in health and disease. Key issues in brain research — evolution, anatomy, development, adaptation and learning — are examined using concepts from functionalist, pragmatist and relational psychoanalytic schools. The course is structured around the book <i>Science, Psychoanalysis, and the Brain: Space for Dialogue</i>.</p>
+            <p class="book-links"><a href="pdf/2015-science-psychoanalysis-brain-space.pdf">The book (PDF)</a><a href="pdf/2015-science-psychoanalysis-brain-hebrew.pdf" lang="he">הספר בעברית</a></p>
+            <details class="fold" open><summary><span>Syllabus, 13 weeks</span><span class="n-count">13</span></summary>
+              <ol class="weeks"><li>Introduction</li><li>More Is Different, Less Is Not Simpler</li><li>Reverse Engineering and Reduction</li><li>Consequences</li><li>Structured Languages, Validation by Congruence</li><li>Relational Objects in Psychology</li><li>Brain Development and the Problem of Localization</li><li>The Conceptual Nervous System</li><li>Neuron Doctrine, Association, Symmetry</li><li>Symmetry Breaking: Structural-Programmatic vs. Functional-Dynamic</li><li>Objects, Truth, Pathology, and Relational Physiology</li><li>Applied Relational Physiology: Cells, Networks, Human Subjects (perception and freedom)</li><li>Sempiterna Temptatio</li></ol>
+            </details>
+            <details class="fold"><summary><span>סילבוס ודרישות הקורס</span><span class="n-count">עברית</span></summary>
+              <div lang="he" dir="rtl" class="he-block">
+                <p>ניתוח אילוצים מובנים בתרבות העכשווית של מחקרים המכוונים להבנה יסודית של התנהגות אנושית, בבריאות וחולי. נשתמש במושגים אשר מקורם בהגות פונקציונלית, פרגמטיסטית, ופסיכואנליטית־התייחסותית, כדי לנתח שאלות ליבה בחקר המוח וההתנהגות: אבולוציה, אנטומיה, התפתחות, אדפטציה ולמידה. הקורס מבוסס על פרקי הספר <i>פסיכואנליזה ונוירו־פיזיולוגיה: מקום לדיאלוג</i>.</p>
+                <ol class="weeks"><li>מבוא</li><li>יותר זה אחר</li><li>צמצום ומורכבות</li><li>הנדסה מהופכת, רדוקציה</li><li>השלכות, לטוב ולרע</li><li>שפות מוּבְנוֹת, תיקוף ומעגלי אימות</li><li>אובייקטים התייחסותיים בפסיכולוגיה</li><li>התפתחות המוח, שאלת המיקומיות</li><li>מערכת עצבים מושגית</li><li>דוקטרינת העצב, אסוציאציה, סימטריה</li><li>שבירת סימטריה, מבנית־תכניתית, פונקציונלית־דינמית</li><li>אובייקטים, אמת, פתולוגיה ופיזיולוגיה התייחסותית</li><li>דוגמאות ליישום פיזיולוגיה התייחסותית: תא, רשת, אדם (פסיכו־פיסיקה וחופש)</li><li>סיכום: פיתוי נצחי</li></ol>
+                <p class="req-h">דרישות הקורס</p>
+                <ul class="req"><li>קריאה מקדימה לקראת כל אחד מהמפגשים.</li>
+                <li>הגשת חיבור (עד חמישה עמודים): ניתוח ביקורתי של פרקטיקה דיסציפלינרית כלשהי (רוח, חברה, טבע) לאור המושגים שנדונו בקורס, או ניסוח עמדה על אחד מנושאי הקורס, או ניסוח של משאלה לחקור בתחום כלשהו, המוטיבציה לעשות זאת וכיוון מחקר מוצע, או (תלמידי מחקר) ניתוח ביקורתי של נושא המחקר לאור המושגים שנדונו בקורס.</li></ul>
+              </div>
+            </details>
+            <details class="fold"><summary><span>Further reading</span><span class="n-count">17</span></summary>
+              <ul class="reading"><li><a href="https://drive.google.com/file/d/1OlbKm43WgvGEFBwBP2LU9Z3WDtxbBoog/view">More Is Different — One More Time</a> <span class="ra">Anderson, 2001</span></li><li><a href="https://drive.google.com/file/d/1rZwV_76KygZ4gubsOJJ6495RmHsXwnDD/view">The Chess Master and the Computer</a> <span class="ra">Kasparov, 2010</span></li><li><a href="pdf/2009-precarious-path-reverse-neuro.pdf">On the Precarious Path of Reverse Neuro-engineering</a> <span class="lang">Marom</span> <span class="ra">Marom et al., 2009</span></li><li><a href="pdf/2020-dialogue-across-chasm-psychology.pdf">Dialogue Across Chasm</a> <span class="lang">Marom</span> <span class="ra">Marom, 2020</span></li><li><a href="https://drive.google.com/file/d/1SP9o9KS69XHnWt0m072ZGVrlMEzWZ4yd/view">Biology and the Future of Psychoanalysis</a> <span class="ra">Kandel, 1999</span></li><li><a href="https://drive.google.com/file/d/1yuWbb8XCtnPwCtLrwZu6Z6DPdzsC_Ymg/view">The Case Against Neuropsychoanalysis</a> <span class="ra">Blass &amp; Carmeli, 2007</span></li><li><a href="https://drive.google.com/file/d/1tjqQ4X2KjzjLLNL8m9JB33D-Yd_Ro2v_/view">Exactitude in Science</a> <a class="alt" href="https://drive.google.com/file/d/1K0cPBqIRmxNIgJo7zPrM35WKm2HDMLJJ/view" lang="he">עברית</a> <span class="ra">Borges, 1946</span></li><li><a href="https://drive.google.com/file/d/1_A2tTa7Hgz37X_6P_Vo0OXLdyU7aUa1b/view">Funes the Memorious</a> <a class="alt" href="https://drive.google.com/file/d/1lB34zmrvfLQxffoPw_uNS60ya_Oo1RxR/view" lang="he">עברית</a> <span class="ra">Borges, 1942</span></li><li><a href="https://www.gutenberg.org/files/5116/5116-h/5116-h.htm#link2H_4_0004">Lecture II — What Pragmatism Means</a> <span class="lang">Open access</span> <span class="ra">James, 1907</span></li><li><a href="https://www.gutenberg.org/files/5116/5116-h/5116-h.htm#link2H_4_0008">Pragmatism's Conception of Truth</a> <span class="lang">Open access</span> <span class="ra">James, 1907</span></li><li><a href="https://drive.google.com/file/d/1IhkJPy9-6SB3sb5JyKhEF5SUfbGTenYJ/view">Mourning and Melancholia</a> <span class="ra">Freud, 1917</span></li><li><a href="https://drive.google.com/file/d/1GY0767Kn7Zq-w6FSugNF-oLEK26GVrSY/view">The Social Brain: an Evolutionary Perspective</a> <span class="ra">Dunbar, 2003</span></li><li><a href="https://drive.google.com/file/d/1Uo2Z5SikCfPu9SeSfrpHyqwIgZJGvfRP/view">Early Physiological Psychology (Ch. IV)</a> <span class="ra">Flügel, 1934</span></li><li><a href="https://drive.google.com/file/d/1I2Sk7ns5rZfIYAKGJGKkOGLXDbJ6hH4A/view">The Reflex Arc Concept in Psychology</a> <span class="ra">Dewey, 1896</span></li><li><a href="https://drive.google.com/file/d/1s8oUEGaxQKHkhXvRcUTRJEkjoVKxTOAh/view">Cortical Plasticity</a> <span class="ra">Buonomano &amp; Merzenich, 1998</span></li><li><a href="http://classics.mit.edu/Plato/meno.html">Meno</a> <span class="lang">Open access</span> <span class="ra">Plato, ca. 400 BC</span></li><li><a href="https://drive.google.com/file/d/1MgWRdoXxnZqAkIzrIu3i2RrvAF5ymm6i/view">Development of Visually Guided Behaviour</a> <span class="ra">Held &amp; Hein, 1963</span></li></ul>
+            </details>
+          </article>
         </div>
       </div>
     </section>
