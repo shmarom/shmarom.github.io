@@ -449,7 +449,7 @@ const SHOW = 6;
 document.querySelectorAll(".reps").forEach(box => {
   const list = AREAS[box.dataset.area]||[];
   const c = document.querySelector(`[data-count="${box.dataset.area}"]`);
-  if (c) c.textContent = list.length + (list.length===1?" paper":" papers");
+  if (c) c.textContent = list.length + (list.length===1?" selected paper":" selected papers");
   box.innerHTML = list.map(r => `<article class="rep"${r.he?' dir="rtl" lang="he"':''}>
     <a class="rep-fig" href="${esc(r.link)}" tabindex="-1" aria-hidden="true"><img src="${r.img}" alt=""></a>
     ${r.credit?`<p class="rep-credit">${esc(r.credit)}</p>`:""}
@@ -459,8 +459,8 @@ document.querySelectorAll(".reps").forEach(box => {
   if (list.length > SHOW) {
     const cards = [...box.children]; cards.slice(SHOW).forEach(el => el.hidden = true);
     const b = document.createElement("button"); b.type="button"; b.className="more";
-    b.textContent = `Show all ${list.length} papers`;
-    b.addEventListener("click", () => { const closed = cards[SHOW].hidden; cards.slice(SHOW).forEach(el => el.hidden = !closed); b.textContent = closed ? "Show fewer" : `Show all ${list.length} papers`; });
+    b.textContent = `Show all ${list.length} selected papers`;
+    b.addEventListener("click", () => { const closed = cards[SHOW].hidden; cards.slice(SHOW).forEach(el => el.hidden = !closed); b.textContent = closed ? "Show fewer" : `Show all ${list.length} selected papers`; });
     box.after(b);
   }
 });
