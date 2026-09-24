@@ -168,17 +168,21 @@ section.panel{padding-block:clamp(2rem,5vw,3.5rem) 0}
 .video{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;background:#000;border-radius:3px;overflow:hidden;margin-top:1.5rem}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .after{margin-top:.8rem;font:500 .85rem/1.4 var(--cond);letter-spacing:.04em}
-.theme{border-top:1px solid var(--ink)}
-.theme:last-child{border-bottom:1px solid var(--ink)}
-.theme>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:1rem;padding:1rem 0}
-.theme>summary::-webkit-details-marker{display:none}
-.theme>summary .tk{font:400 clamp(1.3rem,2.6vw,1.6rem)/1.2 var(--serif);color:var(--ink)}
-.theme>summary .tn{font:500 .72rem/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.theme>summary::after{content:"+";margin-left:auto;font:400 1.2rem/1 var(--mono);color:var(--ink-3)}
-.theme[open]>summary::after{content:"−"}
-.theme>summary:hover .tk{color:var(--spike)}
-.theme .prose{padding-bottom:1.75rem}
+.areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-bottom:2rem}
+.area{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:.35rem;padding:.9rem 1rem 1rem;border:1px solid var(--rule);border-top:3px solid var(--rule);border-radius:3px;background:var(--paper);color:var(--ink);transition:border-color .15s,background .15s}
+.area:hover{border-top-color:var(--ink-3)}
+.area:focus-visible{outline:2px solid var(--scale);outline-offset:3px}
+.area[aria-selected="true"]{border-top-color:var(--spike);background:var(--ground);box-shadow:inset 0 0 0 1px var(--ink-3)}
+.area .an{font:500 .72rem/1 var(--mono);color:var(--spike)}
+.area .ak{font:400 1.2rem/1.2 var(--serif)}
+.area .ag{font-size:.86rem;line-height:1.45;color:var(--ink-2)}
+.area .ac{font:400 .72rem/1 var(--mono);color:var(--ink-3);margin-top:auto;padding-top:.4rem}
+@media (max-width:640px){.areas{grid-template-columns:1fr}.area .ag{display:none}}
+.theme .prose{padding-bottom:1rem}
 .theme .keywords{margin-top:.5rem}
+.more{all:unset;cursor:pointer;margin-top:1.5rem;font:600 .8rem/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--scale);border:1px solid var(--rule);border-radius:3px;padding:.65rem .9rem;background:var(--paper)}
+.more:hover{border-color:var(--scale)}
+.more:focus-visible{outline:2px solid var(--scale);outline-offset:3px}
 .book-links{display:flex;flex-wrap:wrap;gap:.4rem .6rem}
 .book-links a{font:500 .8rem/1 var(--cond);letter-spacing:.04em;text-decoration:none;border:1px solid var(--rule);border-radius:3px;padding:.5rem .65rem;background:var(--paper)}
 .book-links a:hover{border-color:var(--scale)}
@@ -258,17 +262,16 @@ address{font-style:normal}
       <div class="body">
         <div class="side">Three lines of work<br>Excitability · networks · psychology &amp; physiology</div>
         <div class="themes">
-          <details class="theme" open>
-            <summary><span class="tk">Membrane excitability</span><span class="tn">Cells</span></summary>
+          <div class="areas" role="tablist" aria-label="Research areas"><button type="button" class="area" role="tab" id="tab-excitability" aria-controls="area-excitability" aria-selected="true" data-area="excitability"><span class="an">I</span><span class="ak">Membrane excitability</span><span class="ag">Excitability as a toy model for the self-organization of cellular function.</span><span class="ac" data-count="excitability"></span></button><button type="button" class="area" role="tab" id="tab-networks" aria-controls="area-networks" aria-selected="false" data-area="networks"><span class="an">II</span><span class="ak">Neural networks</span><span class="ag">How groups of spikes form, adapt and persist in developing cortical networks.</span><span class="ac" data-count="networks"></span></button><button type="button" class="area" role="tab" id="tab-psychology" aria-controls="area-psychology" aria-selected="false" data-area="psychology"><span class="an">III</span><span class="ak">Psychology &amp; Physiology</span><span class="ag">A space for dialogue between neurophysiology and depth psychology.</span><span class="ac" data-count="psychology"></span></button></div>
+          <div class="theme" role="tabpanel" id="area-excitability" aria-labelledby="tab-excitability">
             <div class="prose">
               <p>The study of excitability, from Galvani and Helmholtz, through Adrian, Hodgkin and Huxley, Neher and Sakmann, all the way to MacKinnon’s elucidation of a channel protein structure, should no doubt make us physiologists very proud of our discipline. But there is still a long way to go. Present concepts and technologies make it possible to implement the biophysical understanding of excitability in the more general context of mechanisms underlying the emergence and maintenance of functional cellular organization. Accordingly, the body of our theoretical and experimental studies reflects the idea of membrane excitability as a toy model for self-organization of cellular function.</p>
               <p>These studies address parameterisation of high-dimensional models of excitability, adaptation over extended ranges of time scales, critical self-organization, multiplicity of system states and its impacts on scaling of rates, modeling state-dependent processes, response entrainment, resilience of function to parametric variations, and the effects of spatial extension (e.g., axonal conduction) on the dynamics of excitability.</p>
               <ul class="keywords" aria-label="Topics"><li>high-dimensional models</li><li>adaptation across time scales</li><li>self-organized criticality</li><li>state multiplicity</li><li>response entrainment</li><li>parametric resilience</li><li>axonal conduction</li></ul>
             </div>
             <div class="reps-wrap"><p class="reps-h">Representative publications</p><div class="reps" data-area="excitability"></div></div>
-          </details>
-          <details class="theme">
-            <summary><span class="tk">Neural networks</span><span class="tn">Populations</span></summary>
+          </div>
+          <div class="theme" role="tabpanel" id="area-networks" aria-labelledby="tab-networks" hidden>
             <div class="prose">
               <p>It is generally believed that behaviors are not mapped to single spikes generated by any one neuron, but rather to groups of spikes. These functional spiking neural activity groups may originate from a single neuron or from populations of neurons firing in synchronic or diachronic manners. The structure of the vast majority of behaviorally relevant neural activity groups is not predetermined by genetics, nor dictated by some sort of an ‘all-knowing teacher’, homunculus. Rather, neural activity groups are formed and modulated throughout life in a dynamic, activity-dependent manner, conforming to evolution and environmental constraints. The formation of neural activity groups is learning; their conservation is memory.</p>
               <p>Of the various alternatives, large random cortical networks developing ex vivo are probably the most appropriate experimental model systems for studying the universals governing formation, adaptation, and conservation of neural activity groups. These networks demonstrate extensive functional connectivity and sensitivity of that connectivity to activity. Moreover, the networks are relatively free of predefined constraints and intervening variables. Alternative experimental models (acute in-vivo, or acute in-vitro) allow one to explore ‘what-is-there’, but not ‘how-it-got-to-be-there’. The latter question is tightly related to development.</p>
@@ -276,9 +279,8 @@ address{font-style:normal}
               <ul class="keywords" aria-label="Topics"><li>multi-electrode arrays</li><li>closed-loop learning</li><li>stimulus representation</li><li>embodiment</li><li>neuromodulation</li><li>modularity</li></ul>
             </div>
             <div class="reps-wrap"><p class="reps-h">Representative publications</p><div class="reps" data-area="networks"></div></div>
-          </details>
-          <details class="theme">
-            <summary><span class="tk">Psychology &amp; Physiology</span><span class="tn">Dialogue</span></summary>
+          </div>
+          <div class="theme" role="tabpanel" id="area-psychology" aria-labelledby="tab-psychology" hidden>
             <div class="prose">
               <p>Out of a developing sense of unease with the nature of the present dialogue between brain science and psychology, I sought understanding, not so much of this or that recent biological finding, but of the roots that feed the stance of neurophysiology toward depth psychology. While meandering in the chasm between physiology and psychology, contemplating the recent history of possible-impossible relations, the text evolved into an essay, a monograph titled <i>Science, Psychoanalysis, and the Brain: Space for Dialogue</i>.</p>
               <p class="book-links"><a href="https://doi.org/10.1017/CBO9781316181706">Cambridge University Press</a><a href="https://drive.google.com/file/d/1aQuaS2nBMxFBz-dge_3oWDxq0cXdwiY-/view">Read online / download</a><a href="https://drive.google.com/file/d/1FSPwcPoRvgCKIbenmVliTRMjR0yb3WVr/view" lang="he">תרגום לעברית</a><a href="http://www.astrolabio-ubaldini.com/libro/1522">Italian translation</a></p>
@@ -286,7 +288,7 @@ address{font-style:normal}
               <p>The underlying assumption is that in the basic sense, as opposed to the applied science sense, the meaning of neurophysiological and neuroanatomical observables resides in their interpretation in light of psychological theories. A dialogue based on such terms, where psychology provides a theoretical framework that contributes to physiology, is beneficial to both parties: Neurophysiology gains something that is currently wanted – constraints and guidelines in phrasing meaningful questions. Psychology might gain further motivation to crystalize its multifaceted concepts. At all events, both camps might enrich the spectrum of metaphors available to them within their own disciplinary realms.</p>
             </div>
             <div class="reps-wrap"><p class="reps-h">Representative publications</p><div class="reps" data-area="psychology"></div></div>
-          </details>
+          </div>
         </div>
       </div>
     </section>
@@ -340,7 +342,7 @@ address{font-style:normal}
     </section>
 
     <section class="panel" id="music" hidden aria-labelledby="h-rec">
-      <div class="sec-head"><span class="num">Music · 10-string guitar</span><h2 id="h-rec">Ten strings, one take</h2></div>
+      <div class="sec-head"><span class="num">Music · 10-string guitar</span><h2 id="h-rec">Ten strings</h2></div>
       <div class="body">
         <div class="side">Yepes tuning<br>MacBook Pro microphone</div>
         <div class="prose">
@@ -431,14 +433,38 @@ document.getElementById("essays").innerHTML = ESSAYS.map(e =>
 
 /* publications */
 /* representative publications per research area */
+const SHOW = 6;
 document.querySelectorAll(".reps").forEach(box => {
-  box.innerHTML = (AREAS[box.dataset.area]||[]).map(r => `<article class="rep"${r.he?' dir="rtl" lang="he"':''}>
+  const list = AREAS[box.dataset.area]||[];
+  const c = document.querySelector(`[data-count="${box.dataset.area}"]`);
+  if (c) c.textContent = list.length + (list.length===1?" paper":" papers");
+  box.innerHTML = list.map(r => `<article class="rep"${r.he?' dir="rtl" lang="he"':''}>
     <a class="rep-fig" href="${esc(r.link)}" tabindex="-1" aria-hidden="true"><img src="${r.img}" alt=""></a>
     ${r.credit?`<p class="rep-credit">${esc(r.credit)}</p>`:""}
     <h4><a href="${esc(r.link)}">${esc(r.title)}</a></h4>
     <p class="rep-meta">${esc(r.auth)} · <i>${esc(r.src)}</i></p>
     <p class="rep-sum">${esc(r.sum)}</p></article>`).join("");
+  if (list.length > SHOW) {
+    const cards = [...box.children]; cards.slice(SHOW).forEach(el => el.hidden = true);
+    const b = document.createElement("button"); b.type="button"; b.className="more";
+    b.textContent = `Show all ${list.length} papers`;
+    b.addEventListener("click", () => { const closed = cards[SHOW].hidden; cards.slice(SHOW).forEach(el => el.hidden = !closed); b.textContent = closed ? "Show fewer" : `Show all ${list.length} papers`; });
+    box.after(b);
+  }
 });
+const areaTabs = [...document.querySelectorAll(".area")];
+function pickArea(k, focus){
+  areaTabs.forEach(b => { const on = b.dataset.area===k; b.setAttribute("aria-selected", on); b.tabIndex = on?0:-1; if(on&&focus) b.focus(); });
+  document.querySelectorAll(".theme").forEach(p => p.hidden = p.id !== "area-"+k);
+}
+areaTabs.forEach((b,i) => {
+  b.addEventListener("click", () => pickArea(b.dataset.area));
+  b.addEventListener("keydown", e => {
+    const d = e.key==="ArrowRight"||e.key==="ArrowDown" ? 1 : e.key==="ArrowLeft"||e.key==="ArrowUp" ? -1 : 0;
+    if (d) { e.preventDefault(); pickArea(areaTabs[(i+d+areaTabs.length)%areaTabs.length].dataset.area, true); }
+  });
+});
+pickArea("excitability");
 
 const TAG = {book:"Book / chapter", data:"Data / code"};
 const list = document.getElementById("pubs"), count = document.getElementById("count"), q = document.getElementById("q");
