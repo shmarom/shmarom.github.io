@@ -128,9 +128,6 @@ section{padding-block:clamp(3.5rem,8vw,6rem) 0}
 .lang{font:500 .66rem/1 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--rule);border-radius:2px;padding:.15rem .3rem;margin-inline-start:.45rem;vertical-align:.12em}
 
 /* guitar */
-.strings{display:grid;gap:5px;margin:1.75rem 0;max-width:var(--measure)}
-.strings i{display:block;height:1px;background:var(--ink-3)}
-.strings i:nth-child(n+7){background:var(--spike);opacity:.8}
 .cta{display:inline-flex;align-items:center;gap:.6rem;font:600 .85rem/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--ground);background:var(--ink);padding:.85rem 1.1rem;border-radius:3px}
 .cta:hover{background:var(--scale)}
 
@@ -156,15 +153,17 @@ section.panel{padding-block:clamp(2rem,5vw,3.5rem) 0}
 .decade>summary .dr{font:400 .8rem/1 var(--mono);color:var(--ink-3)}
 .decade .pubs{padding-bottom:1rem}
 .decade .pubs li:first-child{border-top-color:var(--rule)}
-.people.faces{grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:1.5rem 1.25rem}
+.people.faces{grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:1.75rem 1.25rem;align-items:start}
 .people.faces li{border-top:0;padding:0}
-.people .ph{display:block;aspect-ratio:3/4;width:100%;object-fit:cover;background:var(--rule-2);border-radius:2px;margin-bottom:.6rem;filter:saturate(.9)}
-.people a.n{color:var(--ink);text-decoration:none}
-.people a.n:hover{color:var(--scale);text-decoration:underline}
-.people .co a{color:inherit}
-.people .mail{font:400 .76rem/1.4 var(--mono);display:block;margin-top:.2rem;overflow-wrap:anywhere}
+.people .ph{display:block;width:100%;height:auto;background:var(--rule-2);border-radius:2px;margin-bottom:.6rem;filter:saturate(.9)}
+.people a.n{color:var(--scale);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.18em}
+.people a.n::after{content:" ↗";font-size:.8em}
+.people a.n:hover{text-decoration-thickness:2px}
+.people .co a{color:var(--scale)}
+.people .mail{font:400 .76rem/1.4 var(--mono);display:block;margin-top:.25rem;overflow-wrap:anywhere}
+.people .mail a{color:var(--scale)}
 .current.faces li .ph{outline:2px solid var(--ink);outline-offset:3px}
-.video{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;background:#000;border-radius:3px;overflow:hidden;margin-top:.5rem}
+.video{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;background:#000;border-radius:3px;overflow:hidden;margin-top:1.5rem}
 .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .after{margin-top:.8rem;font:500 .85rem/1.4 var(--cond);letter-spacing:.04em}
 footer{margin-top:clamp(4rem,9vw,7rem);border-top:1px solid var(--ink);padding-block:1.5rem 3rem}
@@ -295,7 +294,6 @@ address{font-style:normal}
         <div class="side">Yepes tuning<br>MacBook Pro microphone</div>
         <div class="prose">
           <p>These are one-take home recordings on a <a href="https://www.michaelgeeguitars.com/">Michael Gee</a> <a href="https://en.wikipedia.org/wiki/Ten-string_classical_guitar_of_Yepes">ten-string classical guitar</a> in Yepes tuning, presented as played, without edits. They are modest sketches, made with the internal microphone of a MacBook Pro, and are intended to convey the resonance and phrasing of this rare instrument. The built-in microphone captures its lowest register only partially.</p>
-          <div class="strings" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <div class="video"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=PL-SF-o58JqLGY1Lx-TF7XHpHd1fnJ7bqI" title="Ten-string guitar recordings, YouTube playlist" loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
           <p class="after"><a href="https://www.youtube.com/playlist?list=PL-SF-o58JqLGY1Lx-TF7XHpHd1fnJ7bqI">Open the playlist on YouTube →</a></p>
         </div>
@@ -368,8 +366,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 function person([n,r,link,co,ph,mail]){
   const name = link ? `<a class="n" href="${link}">${esc(n)}</a>` : `<span class="n">${esc(n)}</span>`;
   const coT = co ? `<span class="co">co-supervised with ${co[1]?`<a href="${co[1]}">${esc(co[0])}</a>`:esc(co[0])}</span>` : "";
-  const m = mail ? `<span class="mail">${esc(mail)}</span>` : "";
-  return `<li><img class="ph" src="${PHOTOS[ph]}" alt="Portrait of ${esc(n)}" loading="lazy" width="330" height="440">${name}<span class="r">${esc(r)}</span>${coT}${m}</li>`;
+  const m = mail ? `<span class="mail"><a href="mailto:${esc(mail)}">${esc(mail)}</a></span>` : "";
+  return `<li><img class="ph" src="${PHOTOS[ph]}" alt="Portrait of ${esc(n)}" >${name}<span class="r">${esc(r)}</span>${coT}${m}</li>`;
 }
 for (const [id,rows] of [["current",CURRENT],["alumni",ALUMNI]]) {
   const ul = document.getElementById(id); ul.classList.add("faces"); ul.innerHTML = rows.map(person).join("");
