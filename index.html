@@ -45,7 +45,7 @@ a:hover{text-decoration-thickness:2px}
 .bar nav::-webkit-scrollbar{display:none}
 .bar nav a{font:500 .82rem/1 var(--cond);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);text-decoration:none;padding:.9rem 0;white-space:nowrap;border-bottom:2px solid transparent}
 .bar nav a:hover,.bar nav a.on{color:var(--ink);border-bottom-color:var(--spike)}
-@media (max-width:640px){.bar .wrap{flex-direction:column;align-items:flex-start;gap:0;padding-top:.7rem}.bar nav{margin-left:0;width:100%}.bar nav a{padding:.7rem 0}}
+@media (max-width:640px){.bar .wrap{flex-direction:column;align-items:flex-start;gap:.15rem;padding-block:.7rem .35rem}.bar nav{margin-left:0;width:100%;flex-wrap:wrap;overflow:visible;gap:0 1.1rem}.bar nav a{padding:.45rem 0;font-size:.78rem}}
 
 /* hero */
 .hero{padding-block:clamp(2.5rem,7vw,5rem) 0}
@@ -58,7 +58,7 @@ h1 em{font-style:italic;font-weight:400}
 .titles dd{margin:0;font-size:1rem;line-height:1.45}
 
 .scope{position:relative;margin:clamp(2rem,5vw,3.5rem) 0 0;border:1px solid var(--rule);border-radius:3px;background:var(--paper);overflow:hidden}
-.scope canvas{display:block;width:100%;height:clamp(180px,24vw,260px)}
+.scope canvas{display:block;width:100%;height:clamp(150px,22vw,230px)}
 .scope figcaption{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font:400 .72rem/1.4 var(--mono);color:var(--ink-3);padding:.55rem .9rem;border-top:1px solid var(--rule-2)}
 .scope button{font:inherit;color:var(--ink-2);background:none;border:1px solid var(--rule);border-radius:3px;padding:.1rem .5rem;cursor:pointer}
 .scope button:hover{color:var(--ink);border-color:var(--ink-3)}
@@ -239,10 +239,10 @@ address{font-style:normal}
 
 
   <div class="wrap">
-      <figure class="scope" aria-label="A live simulation of a neuron within a bursting network">
-      <canvas id="hh" role="img" aria-label="Simulated membrane potential of one Hodgkin–Huxley neuron superposed on a spike raster of 29 other network neurons firing in synchronized bursts"></canvas>
+      <figure class="scope" aria-label="A live Hodgkin–Huxley membrane simulation">
+      <canvas id="hh" role="img" aria-label="Membrane potential of a simulated Hodgkin–Huxley neuron under a noisy current, spiking irregularly"></canvas>
       <figcaption>
-        <span>Red: membrane potential of a Hodgkin–Huxley neuron (1952 squid-axon parameters), driven by the network it belongs to. Grey: spikes of 29 other neurons in that model cortical network, one row each; activity-dependent synaptic depression makes them fire in spontaneous synchronized bursts.</span>
+        <span>V<sub>m</sub>(t) · Hodgkin–Huxley 1952, squid axon parameters, 6.3 °C · noisy injected current, mean 7.0 µA/cm²</span>
         <span><button type="button" id="pause" aria-pressed="false">Pause</button></span>
       </figcaption>
     </figure>
@@ -539,54 +539,31 @@ document.querySelector(".mark").setAttribute("href", "#home");
 addEventListener("hashchange", show);
 show();
 
-/* Hodgkin–Huxley neuron embedded in a bursting network */
+/* Hodgkin–Huxley trace */
 (() => {
   const cv = document.getElementById("hh"), ctx = cv.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  // Hodgkin–Huxley, squid axon parameters (mV, ms, µA/cm²)
-  const gNa=120,gK=36,gL=0.3,ENa=50,EK=-77,EL=-54.387, dt=0.01;
-  let V=-65,m=0.053,h=0.596,n=0.318,noiseI=0;
-  // network: population rate E with synaptic depression x (Tsodyks–Markram style), time in s
-  const tauE=0.01,tauRec=2.0,U=0.4,J=6,I0=-1.5,sigN=0.6,tauN=0.05;
-  let E=0.02,x=1,noiseN=0;
-  const N=30, WIN=4000;               // neurons, window in ms
-  const gain=[...Array(N)].map((_,i)=>i?0.5+Math.random():1);
-  const SAMPLE=0.5, NS=WIN/SAMPLE, SUB=Math.round(SAMPLE/dt);
-  const vbuf=new Float32Array(NS).fill(-65); let head=0;
-  const spikes=[...Array(N)].map(()=>[]);   // spike times (ms) per neuron
-  let t=0, above=false;
+  const gNa=120,gK=36,gL=0.3,ENa=50,EK=-77,EL=-54.387,C=1, dt=0.01;
+  let V=-65,m=0.053,h=0.596,n=0.318,I=7,t=0;
+  const tau=5, mu=7, sigma=2.6; // Ornstein–Uhlenbeck current, µA/cm²
+  const WIN=120; // ms shown
+  const SAMPLE=0.1, SUB=Math.round(SAMPLE/dt); const N=Math.round(WIN/SAMPLE);
+  const buf=new Float32Array(N).fill(-65); let head=0;
   function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
-  function netStep(ds){ // ds in s
-    noiseN += ds*(-noiseN/tauN) + sigN*Math.sqrt(2*ds/tauN)*randn();
-    const f = 1/(1+Math.exp(-4*(J*x*E+I0+noiseN-0.5)));
-    E += ds*(-E+f)/tauE; x += ds*((1-x)/tauRec - U*x*E*25);
-  }
-  function hhStep(){
+  function step(){
     const am=0.1*(V+40)/(1-Math.exp(-(V+40)/10)), bm=4*Math.exp(-(V+65)/18);
     const ah=0.07*Math.exp(-(V+65)/20), bh=1/(1+Math.exp(-(V+35)/10));
     const an=0.01*(V+55)/(1-Math.exp(-(V+55)/10)), bn=0.125*Math.exp(-(V+65)/80);
     m+=dt*(am*(1-m)-bm*m); h+=dt*(ah*(1-h)-bh*h); n+=dt*(an*(1-n)-bn*n);
-    noiseI += dt*(-noiseI/5) + 0.9*Math.sqrt(2*dt/5)*randn();
-    const I = 0.5 + 14*E + noiseI;       // network drive onto neuron 1
-    V += dt*(I - gNa*m*m*m*h*(V-ENa) - gK*n*n*n*n*(V-EK) - gL*(V-EL));
-    t += dt;
-    if (!above && V>0) { above=true; spikes[0].push(t); } else if (above && V<-20) above=false;
+    I+= dt*(mu-I)/tau + sigma*Math.sqrt(2*dt/tau)*randn();
+    V+= dt*(I - gNa*m*m*m*h*(V-ENa) - gK*n*n*n*n*(V-EK) - gL*(V-EL))/C;
+    t+=dt;
   }
-  function advance(ms){
-    const k=Math.round(ms/SAMPLE);
-    for(let i=0;i<k;i++){
-      netStep(SAMPLE/1000);
-      const p = SAMPLE/1000*(1.5+60*E);  // spike probability per sample, other neurons
-      for(let j=1;j<N;j++) if (Math.random() < p*gain[j]) spikes[j].push(t+Math.random()*SAMPLE);
-      for(let s=0;s<SUB;s++) hhStep();
-      vbuf[head]=V; head=(head+1)%NS;
-    }
-    const t0=t-WIN; for(const s of spikes){ let c=0; while(c<s.length && s[c]<t0) c++; if(c) s.splice(0,c); }
-  }
-  advance(WIN); // first frame shows a full window
+  function advance(ms){ const k=Math.round(ms/SAMPLE); for(let i=0;i<k;i++){ for(let j=0;j<SUB;j++) step(); buf[head]=V; head=(head+1)%N; } }
+  advance(WIN); // fill the window so the first frame is a real trace
   let col={};
   function readColors(){ const s=getComputedStyle(document.documentElement);
-    col={ink:s.getPropertyValue("--ink-3").trim(),ink2:s.getPropertyValue("--ink-2").trim(),rule:s.getPropertyValue("--rule-2").trim(),rule2:s.getPropertyValue("--rule").trim(),spike:s.getPropertyValue("--spike").trim()}; }
+    col={ink:s.getPropertyValue("--ink-3").trim(),rule:s.getPropertyValue("--rule-2").trim(),rule2:s.getPropertyValue("--rule").trim(),spike:s.getPropertyValue("--spike").trim()}; }
   readColors();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{readColors();draw();});
   new MutationObserver(()=>{readColors();draw();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
@@ -596,54 +573,37 @@ show();
   function draw(){
     if(!W) return;
     ctx.clearRect(0,0,W,H);
-    const padL = W<500?40:56, padR = W<500?30:44, top=22, bot=30;
-    const x0=padL, x1=W-padR, xw=x1-x0, pH=H-top-bot;
-    const y = v => top + (vMax-v)/(vMax-vMin)*pH;
-    const t0=t-WIN, sx=xw/WIN, rowH=pH/(N-1);
+    const padL = W<500?40:56, padR = W<500?16:40, top=26, bot=36;
+    const y = v => top + (vMax - v)/(vMax - vMin)*(H-top-bot);
+    const x0=padL, x1=W-padR, xs=(x1-x0)/(N-1);
     ctx.font = "10.5px 'IBM Plex Mono', ui-monospace, monospace"; ctx.textBaseline="middle";
-    // voltage grid
     for(const v of [-80,-40,0,40]){
       ctx.strokeStyle = v===0?col.rule2:col.rule; ctx.lineWidth=1;
       ctx.beginPath(); ctx.moveTo(x0,Math.round(y(v))+.5); ctx.lineTo(x1,Math.round(y(v))+.5); ctx.stroke();
       ctx.fillStyle=col.ink; ctx.textAlign="right"; ctx.fillText((v>0?"+":"")+v, x0-8, y(v));
     }
-    ctx.textAlign="right"; ctx.fillText("mV", x0-8, 8);
-    // network raster behind: neurons 2–30, one row each over the full plot height
-    ctx.strokeStyle=col.ink2; ctx.globalAlpha=.42; ctx.lineWidth=1; ctx.beginPath();
-    for(let j=1;j<N;j++){
-      const yy=top+(j-1)*rowH;
-      for(const s of spikes[j]){ const X=Math.round(x0+(s-t0)*sx)+.5; ctx.moveTo(X,yy+rowH*.1); ctx.lineTo(X,yy+rowH*.9); }
+    ctx.textAlign="right"; ctx.fillText("mV", x0-8, 10);
+    // slide-rule style ms ticks along the bottom
+    const pxPerMs=(x1-x0)/WIN, base=H-bot+6;
+    ctx.strokeStyle=col.ink;
+    for(let ms=0; ms<=WIN; ms++){
+      const len = ms%10===0?7:ms%5===0?4.5:2.5; if(pxPerMs<3 && ms%5) continue;
+      const xx=Math.round(x1 - ms*pxPerMs)+.5;
+      ctx.beginPath(); ctx.moveTo(xx,base); ctx.lineTo(xx,base+len); ctx.stroke();
     }
-    ctx.stroke(); ctx.globalAlpha=1;
-    // right axis: neuron index
-    ctx.fillStyle=col.ink; ctx.textAlign="left";
-    ctx.fillText("2", x1+8, top+rowH*.5); ctx.fillText(String(N), x1+8, top+pH-rowH*.5);
-    ctx.save(); ctx.translate(W-8, top+pH/2); ctx.rotate(Math.PI/2); ctx.textAlign="center"; ctx.fillText("neurons",0,0); ctx.restore();
-    // neuron 1: membrane potential on top (min/max per pixel column so every spike survives)
-    ctx.strokeStyle=col.spike; ctx.lineWidth=1.3; ctx.beginPath();
-    const per = NS/xw;
-    for(let px=0; px<xw; px++){
-      let lo=1e9, hi=-1e9; const a=Math.floor(px*per), b=Math.max(a+1,Math.floor((px+1)*per));
-      for(let i=a;i<b;i++){ const v=vbuf[(head+i)%NS]; if(v<lo)lo=v; if(v>hi)hi=v; }
-      const X=x0+px+.5; ctx.moveTo(X, y(Math.min(vMax,hi))); ctx.lineTo(X, y(Math.max(vMin,lo))+.01);
-    }
+    ctx.fillStyle=col.ink; ctx.textAlign="right"; ctx.fillText("long tick = 10 ms", x1, H-9);
+    ctx.lineWidth=1.6; ctx.lineJoin="round"; ctx.strokeStyle=col.spike; ctx.beginPath();
+    for(let i=0;i<N;i++){ const v=buf[(head+i)%N]; const px=x0+i*xs, py=y(Math.max(vMin,Math.min(vMax,v))); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }
     ctx.stroke();
-    // time ticks: 100 ms, long = 500 ms
-    const base=H-bot+6; ctx.strokeStyle=col.ink; ctx.lineWidth=1;
-    for(let ms=0; ms<=WIN; ms+=100){
-      const len = ms%500===0?7:3.5, X=Math.round(x1-ms*sx)+.5;
-      ctx.beginPath(); ctx.moveTo(X,base); ctx.lineTo(X,base+len); ctx.stroke();
-    }
-    ctx.fillStyle=col.ink; ctx.textAlign="right"; ctx.fillText("long tick = 500 ms", x1, H-8);
+    const vl=buf[(head+N-1)%N]; ctx.fillStyle=col.spike; ctx.beginPath(); ctx.arc(x1,y(vl),3,0,7); ctx.fill();
   }
   let running=!reduce, lastT=0;
   const btn=document.getElementById("pause");
   function sync(){ btn.textContent = running?"Pause":"Play"; btn.setAttribute("aria-pressed", String(!running)); }
   btn.addEventListener("click",()=>{ running=!running; sync(); if(running){lastT=0;requestAnimationFrame(loop);} });
   sync();
-  const SPEED=0.6; // fraction of real time
   function loop(ts){ if(!running) return; if(document.getElementById("home").hidden){ lastT=0; requestAnimationFrame(loop); return; }
-    const d = lastT? Math.min(ts-lastT,50):16; lastT=ts; advance(d*SPEED); draw(); requestAnimationFrame(loop); }
+    const d = lastT? Math.min(ts-lastT,50):16; lastT=ts; advance(d*0.02); draw(); requestAnimationFrame(loop); }
   new ResizeObserver(size).observe(cv);
   document.addEventListener("panel", e => { if (e.detail === "home") size(); });
   document.addEventListener("visibilitychange",()=>{ lastT=0; });
