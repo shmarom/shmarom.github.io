@@ -61,6 +61,12 @@ a:hover{text-decoration-thickness:2px}
 .scope figcaption{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font:400 .72rem/1.4 var(--mono);color:var(--ink-3);padding:.55rem .9rem;border-top:1px solid var(--rule-2)}
 .scope button{font:inherit;color:var(--ink-2);background:none;border:1px solid var(--rule);border-radius:3px;padding:.1rem .5rem;cursor:pointer}
 .scope button:hover{color:var(--ink);border-color:var(--ink-3)}
+.scope-btns{display:flex;gap:.4rem}
+.scope button[aria-expanded="true"]{color:var(--ink);border-color:var(--ink-3)}
+.scope-details{margin:0;border-top:1px solid var(--rule-2);padding:.7rem .9rem .8rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.6rem 1.5rem;font:400 .72rem/1.5 var(--mono);background:var(--ground)}
+.scope-details[hidden]{display:none}
+.scope-details dt{color:var(--ink-3);margin-bottom:.1rem}
+.scope-details dd{margin:0;color:var(--ink-2)}
 
 /* statement */
 .statement{margin-top:clamp(2.5rem,6vw,4rem);display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:1.5rem 2.5rem;padding:1.6rem 0 0;border-top:3px double var(--rule)}
@@ -266,8 +272,14 @@ address{font-style:normal}
       <canvas id="hh" role="img" aria-label="Membrane potential of a simulated Hodgkin–Huxley neuron under a noisy current, spiking irregularly"></canvas>
       <figcaption>
         <span>V<sub>m</sub>(t) · Hodgkin–Huxley 1952, squid axon parameters, 6.3 °C · noisy injected current, mean 7.0 µA/cm²</span>
-        <span><button type="button" id="pause" aria-pressed="false">Pause</button></span>
+        <span class="scope-btns"><button type="button" id="details" aria-expanded="false" aria-controls="scope-details">Details</button><button type="button" id="pause" aria-pressed="false">Pause</button></span>
       </figcaption>
+      <dl class="scope-details" id="scope-details" hidden>
+        <div><dt>Model</dt><dd>Hodgkin–Huxley (1952), squid giant axon, 6.3 °C; forward Euler, step 0.01 ms</dd></div>
+        <div><dt>Injected current</dt><dd>Ornstein–Uhlenbeck process: mean 7.0 µA/cm², SD 2.6 µA/cm², correlation time 5 ms — coloured noise, flat spectrum below ≈32 Hz</dd></div>
+        <div><dt>Resulting firing</dt><dd>≈53 Hz; mean interspike interval 18.9 ms, CV 0.36</dd></div>
+        <div><dt>Display</dt><dd>120 ms window, redrawn at 1/50 of real time</dd></div>
+      </dl>
     </figure>
     <div class="statement" aria-label="Statement">
       <p lang="en">The current state of affairs is exposing the weakness of the Israeli leadership and its horrific price. We will rise to the challenge, but it is clear that supporting Netanyahu’s continued tenure reflects a deep moral and ethical decay.</p>
@@ -660,6 +672,8 @@ show();
     const vl=buf[(head+N-1)%N]; ctx.fillStyle=col.spike; ctx.beginPath(); ctx.arc(x1,y(vl),3,0,7); ctx.fill();
   }
   let running=!reduce, lastT=0;
+  const dbtn=document.getElementById("details"), dbox=document.getElementById("scope-details");
+  dbtn.addEventListener("click",()=>{ const open=dbox.hidden; dbox.hidden=!open; dbtn.setAttribute("aria-expanded",String(open)); if(open) size(); });
   const btn=document.getElementById("pause");
   function sync(){ btn.textContent = running?"Pause":"Play"; btn.setAttribute("aria-pressed", String(!running)); }
   btn.addEventListener("click",()=>{ running=!running; sync(); if(running){lastT=0;requestAnimationFrame(loop);} });
