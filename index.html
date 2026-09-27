@@ -548,6 +548,19 @@ for (const [id,rows] of [["current",CURRENT],["alumni",ALUMNI]]) {
   const ul = document.getElementById(id); ul.classList.add("faces"); ul.innerHTML = rows.map(person).join("");
 }
 const bioBox = document.getElementById("biosketch");
+const bioHome = bioBox.previousElementSibling;           // the row of current members
+const bioCard = document.querySelector(".bio-toggle")?.closest("li");
+// When the cards stack (phone), keep the panel inside the card so it opens right
+// under the button; when they sit in a row, put it below the row so it can be wide.
+function placeBio(){
+  if (!bioCard) return;
+  const stacked = bioCard.getBoundingClientRect().width > 300;
+  if (stacked && bioBox.parentElement !== bioCard) bioCard.appendChild(bioBox);
+  else if (!stacked && bioBox.parentElement === bioCard) bioHome.after(bioBox);
+}
+placeBio();
+addEventListener("resize", placeBio);
+document.addEventListener("panel", e => { if (e.detail === "group") placeBio(); });
 document.querySelectorAll(".bio-toggle").forEach(b => b.addEventListener("click", () => {
   const open = bioBox.hidden;
   bioBox.hidden = !open;
