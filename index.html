@@ -232,13 +232,17 @@ section.panel{padding-block:clamp(2rem,5vw,3.5rem) 0}
 .rep-vid{margin:0 0 .55rem;padding:0;border:1px solid var(--rule);border-radius:2px;background:#000;overflow:hidden}
 .rep-vid video{display:block;width:100%;height:auto}
 .vcred{margin:.4rem 0 0}
-.bio{margin:2rem 0 0;border:1px solid var(--rule);border-left:3px solid var(--spike);border-radius:3px;padding:1rem 1.2rem 1.1rem;background:var(--paper);max-width:46rem}
-.bio-h{font:600 .74rem/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:0 0 .6rem}
+.bio{margin:2rem 0 0;border:1px solid var(--rule);border-left:3px solid var(--spike);border-radius:3px;background:var(--paper);max-width:46rem}
+.bio>summary{padding:.7rem 1.2rem}
+.bio>summary>span:first-child{font:600 .74rem/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.bio>summary::after{margin-left:auto}
+.bio-body{padding:0 1.2rem 1.1rem}
 .bio p{margin:0;font-size:.95rem;line-height:1.6}
-.roles{margin:.9rem 0 0;padding:.75rem 0 0;border-top:1px solid var(--rule-2);display:grid;gap:.3rem}
+.roles-h{font:600 .72rem/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:1.1rem 0 .1rem!important}
+.roles{margin:.5rem 0 0;padding:.5rem 0 0;border-top:1px solid var(--rule-2);display:grid;gap:.3rem}
 .roles div{display:flex;gap:1rem;align-items:baseline;justify-content:space-between}
 .roles dt{font-size:.9rem;line-height:1.45;color:var(--ink-2)}
-.roles dd{margin:0;font:400 .78rem/1.4 var(--mono);color:var(--ink-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.roles dd{margin:0;font:400 .78rem/1.4 var(--mono);color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
 footer{margin-top:clamp(4rem,9vw,7rem);border-top:1px solid var(--ink);padding-block:1.5rem 3rem}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;font:400 .8rem/1.6 var(--mono);color:var(--ink-3)}
 address{font-style:normal}
@@ -356,16 +360,25 @@ address{font-style:normal}
         <div>
           <p class="sub">Current</p>
           <ul class="people current" id="current"></ul>
-          <aside class="bio">
-            <p class="bio-h">Biosketch</p>
-            <p>Professor and the Pearl Seiden Chair in Sciences, Faculty of Medicine (primary affiliation) and Faculty of Electrical &amp; Computer Engineering (secondary affiliation), Technion – Israel Institute of Technology. Basic training in psychology, physiology, biophysics and medicine (MD, PhD).</p>
-            <dl class="roles">
-              <div><dt>Head, Department of Physiology &amp; Biophysics, Faculty of Medicine</dt></div>
-              <div><dt>Head, Rothschild Scholars Technion Program for Excellence</dt><dd>2012–2014</dd></div>
-              <div><dt>Dean, Faculty of Medicine</dt><dd>2017–2019</dd></div>
-              <div><dt>Executive Vice President for Academic Affairs, Technion</dt><dd>2019–2022</dd></div>
-            </dl>
-          </aside>
+          <details class="bio fold">
+            <summary><span>Biosketch</span></summary>
+            <div class="bio-body">
+              <p>Professor and the Pearl Seiden Chair in Sciences, Faculty of Medicine (primary affiliation) and Faculty of Electrical &amp; Computer Engineering (secondary affiliation), Technion – Israel Institute of Technology. CEO of the Samuel Neaman Institute for National Policy Research.</p>
+              <p class="roles-h">Training</p>
+              <dl class="roles">
+                <div><dt>Psychology</dt><dd>University of Haifa</dd></div>
+                <div><dt>Physiology &amp; Biophysics (PhD), Medicine (MD)</dt><dd>Technion</dd></div>
+                <div><dt>Postdoctoral</dt><dd>Brandeis University</dd></div>
+              </dl>
+              <p class="roles-h">Previously</p>
+              <dl class="roles">
+                <div><dt>Head, Department of Physiology &amp; Biophysics, Faculty of Medicine</dt></div>
+                <div><dt>Head, Rothschild Scholars Technion Program for Excellence</dt><dd>2012–2014</dd></div>
+                <div><dt>Dean, Faculty of Medicine</dt><dd>2017–2019</dd></div>
+                <div><dt>Executive Vice President for Academic Affairs, Technion</dt><dd>2019–2022</dd></div>
+              </dl>
+            </div>
+          </details>
           <details class="fold">
             <summary><span>Alumni</span><span class="n-count">22</span></summary>
             <ul class="people" id="alumni"></ul>
