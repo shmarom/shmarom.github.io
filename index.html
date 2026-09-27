@@ -232,10 +232,15 @@ section.panel{padding-block:clamp(2rem,5vw,3.5rem) 0}
 .rep-vid{margin:0 0 .55rem;padding:0;border:1px solid var(--rule);border-radius:2px;background:#000;overflow:hidden}
 .rep-vid video{display:block;width:100%;height:auto}
 .vcred{margin:.4rem 0 0}
-.bio{margin:2rem 0 0;border:1px solid var(--rule);border-left:3px solid var(--spike);border-radius:3px;background:var(--paper);max-width:46rem}
-.bio>summary{padding:.7rem 1.2rem}
-.bio>summary>span:first-child{font:600 .74rem/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
-.bio>summary::after{margin-left:auto}
+.bio{margin:1.6rem 0 0;border:1px solid var(--rule);border-left:3px solid var(--spike);border-radius:3px;background:var(--paper);max-width:52rem}
+.bio[hidden]{display:none}
+.bio-body{padding-top:1rem!important}
+.bio-toggle{all:unset;box-sizing:border-box;display:inline-block;margin-top:.5rem;cursor:pointer;font:600 .68rem/1 var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--rule);border-radius:3px;padding:.4rem .55rem;background:var(--paper)}
+.bio-toggle:hover{color:var(--ink);border-color:var(--ink-3)}
+.bio-toggle:focus-visible{outline:2px solid var(--scale);outline-offset:2px}
+.bio-toggle::after{content:" +";color:var(--spike)}
+.bio-toggle[aria-expanded="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.bio-toggle[aria-expanded="true"]::after{content:" −";color:var(--ground)}
 .bio-body{padding:0 1.2rem 1.1rem}
 .bio-awards{margin-top:.7rem!important;color:var(--ink-2)}
 .bio p{margin:0;font-size:.95rem;line-height:1.6}
@@ -361,8 +366,7 @@ address{font-style:normal}
         <div>
           <p class="sub">Current</p>
           <ul class="people current" id="current"></ul>
-          <details class="bio fold">
-            <summary><span>Biosketch</span></summary>
+          <div class="bio" id="biosketch" hidden>
             <div class="bio-body">
               <p>Professor and the Pearl Seiden Chair in Sciences, Faculty of Medicine (primary affiliation) and Faculty of Electrical &amp; Computer Engineering (secondary affiliation), Technion – Israel Institute of Technology. CEO of the Samuel Neaman Institute for National Policy Research.</p>
               <p class="bio-awards">Honours include the Schaefer Research Scholar award (Columbia University, 2022), the Shaked Brain Research Prize (Bar-Ilan University, 2008), the Sir Bernard Katz Prize (Heidelberg, 1994), an Alon Fellowship (1993) and a Fulbright Foundation Junior Researcher Award (1991).</p>
@@ -380,7 +384,7 @@ address{font-style:normal}
                 <div><dt>Executive Vice President for Academic Affairs, Technion</dt><dd>2019–2022</dd></div>
               </dl>
             </div>
-          </details>
+          </div>
           <details class="fold">
             <summary><span>Alumni</span><span class="n-count">22</span></summary>
             <ul class="people" id="alumni"></ul>
@@ -485,7 +489,7 @@ const AREAS = {"excitability": [{"title": "Bounded multiplicative dynamics gover
 
 const LI="https://www.linkedin.com/in/";
 const CURRENT = [
- ["Shimon Marom","Principal investigator",null,null,0],
+ ["Shimon Marom","Principal investigator",null,null,0,null,true],
  ["Yael Kafri","Graduate student",null,null,1],
  ["Yael Abuhatsera","Lab manager",null,null,2,"yaelabu@technion.ac.il"],
  ["Leonid Odessky","Lab engineer",null,null,3,"odesskyl@gmail.com"]];
@@ -533,15 +537,23 @@ const ESSAYS = [
 
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-function person([n,r,link,co,ph,mail]){
+function person([n,r,link,co,ph,mail,bio]){
   const name = link ? `<a class="n" href="${link}">${esc(n)}</a>` : `<span class="n">${esc(n)}</span>`;
   const coT = co ? `<span class="co">co-supervised with ${co[1]?`<a href="${co[1]}">${esc(co[0])}</a>`:esc(co[0])}</span>` : "";
   const m = mail ? `<span class="mail"><a href="mailto:${esc(mail)}">${esc(mail)}</a></span>` : "";
-  return `<li><img class="ph" src="${PHOTOS[ph]}" alt="Portrait of ${esc(n)}" >${name}<span class="r">${esc(r)}</span>${coT}${m}</li>`;
+  const bioBtn = bio ? `<button type="button" class="bio-toggle" aria-expanded="false" aria-controls="biosketch">Biosketch</button>` : "";
+  return `<li><img class="ph" src="${PHOTOS[ph]}" alt="Portrait of ${esc(n)}" >${name}<span class="r">${esc(r)}</span>${coT}${m}${bioBtn}</li>`;
 }
 for (const [id,rows] of [["current",CURRENT],["alumni",ALUMNI]]) {
   const ul = document.getElementById(id); ul.classList.add("faces"); ul.innerHTML = rows.map(person).join("");
 }
+const bioBox = document.getElementById("biosketch");
+document.querySelectorAll(".bio-toggle").forEach(b => b.addEventListener("click", () => {
+  const open = bioBox.hidden;
+  bioBox.hidden = !open;
+  b.setAttribute("aria-expanded", String(open));
+  if (open) bioBox.scrollIntoView({block:"nearest", behavior:"smooth"});
+}));
 
 document.getElementById("essays").innerHTML = ESSAYS.map(e =>
   `<li><span class="y">${e.y}</span><div><a class="t" href="${e.u}"${e.he?' lang="he" dir="rtl"':''}>${esc(e.t)}</a>${e.he?'<span class="lang">Hebrew</span>':''}${e.kind?`<span class="lang">${e.kind}</span>`:''}${e.m?`<div class="m">${e.m}</div>`:''}</div></li>`).join("");
