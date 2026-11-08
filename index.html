@@ -296,8 +296,8 @@ address{font-style:normal}
           <a href="#research-psychology"><span class="an">III</span><span class="k">Psychology &amp; Physiology</span><span class="d">A space for dialogue between neurophysiology and depth psychology</span></a>
         </div>
       </div>
-      <a href="#group"><span class="k">Group</span><span class="d">4 current members · 22 alumni, 1996–2025</span></a>
-      <a href="#publications"><span class="k">Publications</span><span class="d"><span id="npubs">82</span> papers, books and datasets since 1987, searchable</span></a>
+      <a href="#group"><span class="k">Group</span><span class="d">Current members and alumni</span></a>
+      <a href="#publications"><span class="k">Publications</span><span class="d">Papers, books and datasets, searchable</span></a>
       <a href="#teaching"><span class="k">Teaching</span><span class="d">Two graduate courses: excitability, and psychology &amp; physiology</span></a>
       <a href="#society"><span class="k">Science &amp; society</span><span class="d">16 essays and lectures in Hebrew and English</span></a>
       <a href="#music"><span class="k">Music</span><span class="d">One-take sketches on a ten-string guitar</span></a>
@@ -650,7 +650,6 @@ render();
 /* tabs: one section at a time, deep-linkable by #name */
 const links = [...document.querySelectorAll(".bar nav a")];
 const panels = [...document.querySelectorAll(".panel")];
-document.getElementById("npubs").textContent = PUBS.length;
 function show(){
   let id = location.hash.slice(1);
   if (id === "recordings") id = "music";
